@@ -1,14 +1,16 @@
+import datetime
 import os
 import re
 import sys
 import time
 
 import ffmpeg
+import pytz
 import requests as req
 from requests import Session
 
 import errors
-from enums import Mode, Error, StatusCode, TimeOut
+from enums import Error, Mode, StatusCode, TimeOut
 from httpclient import HttpClient
 
 
@@ -96,7 +98,19 @@ class TikTok:
         if not live_url:
             raise ValueError(Error.URL_NOT_FOUND)
 
-        current_date = time.strftime("%Y.%m.%d_%H-%M-%S", time.localtime())
+        # change to jakarta timezone with pytz
+        utc = pytz.utc
+        
+        # set timezone to jakarta
+        jakarta_timezone = pytz.timezone('Asia/Jakarta')
+
+        # get current date and time in jakarta timezone
+        jakarta_date = utc.localize(datetime.datetime.now()).astimezone(jakarta_timezone)
+
+        # format date and time
+        current_date = jakarta_date.strftime("%d-%m-%Y_%H:%M:%S")
+        
+        # current_date = time.strftime("%Y.%m.%d_%H-%M-%S", time.localtime())
 
         if self.output != "" and isinstance(self.output, str) and not (
                 self.output.endswith('/') or self.output.endswith('\\')):
@@ -105,7 +119,7 @@ class TikTok:
             else:
                 self.output = self.output + "/"
 
-        output = f"{self.output if self.output else ''}TK_{self.user}_{current_date}_flv.mp4"
+        output = f"{self.output if self.output else ''}Live_Tiktok_{self.user}_{current_date}_flv.mp4"
 
         print("")
         (
