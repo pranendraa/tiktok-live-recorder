@@ -83,7 +83,7 @@ class TikTok:
         Convert the video from flv format to mkv format
         """
         try:
-            self.logger.info("Converting {} to MP4 format...".format(file))
+            self.logger.info("Converting {} to MKV format...".format(file))
             ffmpeg.input(file).output(file.replace('_flv.mkv', '.mkv'), y='-y').run(quiet=True)
             os.remove(file)
             self.logger.info("Finished converting {}".format(file))
