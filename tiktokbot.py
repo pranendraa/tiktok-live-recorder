@@ -78,13 +78,13 @@ class TikTok:
 
                 self.start_recording()
 
-    def convertion_mp4(self, file):
+    def convertion_mkv(self, file):
         """
-        Convert the video from flv format to mp4 format
+        Convert the video from flv format to mkv format
         """
         try:
             self.logger.info("Converting {} to MP4 format...".format(file))
-            ffmpeg.input(file).output(file.replace('_flv.mp4', '.mp4'), y='-y').run(quiet=True)
+            ffmpeg.input(file).output(file.replace('_flv.mkv', '.mkv'), y='-y').run(quiet=True)
             os.remove(file)
             self.logger.info("Finished converting {}".format(file))
         except FileNotFoundError:
@@ -119,7 +119,7 @@ class TikTok:
             else:
                 self.output = self.output + "/"
 
-        output = f"{self.output if self.output else ''}Live_Tiktok_{self.user}_{current_date}_flv.mp4"
+        output = f"{self.output if self.output else ''}Live_Tiktok_{self.user}_{current_date}_flv.mkv"
 
         print("")
         (
@@ -133,9 +133,9 @@ class TikTok:
                 stream = ffmpeg.input(live_url)
 
                 if self.duration is not None:
-                    stream = ffmpeg.output(stream, output.replace("_flv.mp4", ".mp4"), c='copy', t=self.duration)
+                    stream = ffmpeg.output(stream, output.replace("_flv.mkv", ".mkv"), c='copy', t=self.duration)
                 else:
-                    stream = ffmpeg.output(stream, output.replace("_flv.mp4", ".mp4"), c='copy')
+                    stream = ffmpeg.output(stream, output.replace("_flv.mkv", ".mkv"), c='copy')
 
                 ffmpeg.run(stream, quiet=True)
             else:
@@ -165,12 +165,12 @@ class TikTok:
             return
 
         if not self.convert:
-            self.logger.info("Do you want to convert it to real mp4? [Requires ffmpeg installed]")
+            self.logger.info("Do you want to convert it to real mkv? [Requires ffmpeg installed]")
             choice = input("Y/N -> ")
             if choice.lower() == "y":
-                self.convertion_mp4(output)
+                self.convertion_mkv(output)
         else:
-            self.convertion_mp4(output)
+            self.convertion_mkv(output)
 
     def get_live_url(self) -> str:
         """

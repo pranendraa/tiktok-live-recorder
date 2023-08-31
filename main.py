@@ -3,7 +3,7 @@ import re
 
 import errors
 import logger_manager
-from enums import Mode, Info, Error, Regex
+from enums import Error, Info, Mode, Regex
 from httpclient import HttpClient
 from tiktokbot import TikTok
 
@@ -48,7 +48,7 @@ def parse_args():
                         action='store')
     parser.add_argument("-ffmpeg",
                         dest="ffmpeg",
-                        help="recording via ffmpeg, allows real-time conversion to mp4",
+                        help="recording via ffmpeg, allows real-time conversion to mkv",
                         action="store_const",
                         const=True)
     parser.add_argument("-duration",
