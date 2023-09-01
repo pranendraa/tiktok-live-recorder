@@ -79,12 +79,9 @@ class TikTok:
                 self.start_recording()
 
     def convertion_mkv(self, file):
-        """
-        Convert the video from flv format to mkv format
-        """
         try:
             self.logger.info("Converting {} to MKV format...".format(file))
-            ffmpeg.input(file).output(file.replace('_flv.mkv', '.mkv'), y='-y').run(quiet=True)
+            ffmpeg.input(file).output(file.replace('_hls.mkv', '.mkv'), y='-y').run(quiet=True)
             os.remove(file)
             self.logger.info("Finished converting {}".format(file))
         except FileNotFoundError:
@@ -119,7 +116,7 @@ class TikTok:
             else:
                 self.output = self.output + "/"
 
-        output = f"{self.output if self.output else ''}Live_Tiktok_{self.user}_{current_date}_flv.mkv"
+        output = f"{self.output if self.output else ''}Live_Tiktok_{self.user}_{current_date}_hls.mkv"
 
         print("")
         (
@@ -133,9 +130,9 @@ class TikTok:
                 stream = ffmpeg.input(live_url)
 
                 if self.duration is not None:
-                    stream = ffmpeg.output(stream, output.replace("_flv.mkv", ".mkv"), c='copy', t=self.duration)
+                    stream = ffmpeg.output(stream, output.replace("_hls.mkv", ".mkv"), c='copy', t=self.duration)
                 else:
-                    stream = ffmpeg.output(stream, output.replace("_flv.mkv", ".mkv"), c='copy')
+                    stream = ffmpeg.output(stream, output.replace("_hls.mkv", ".mkv"), c='copy')
 
                 ffmpeg.run(stream, quiet=True)
             else:
@@ -183,10 +180,10 @@ class TikTok:
             if 'This account is private' in json:
                 raise errors.AccountPrivate('Account is private, login required')
 
-            live_url_flv = json['data']['stream_url']['rtmp_pull_url']
-            self.logger.info(f"LIVE URL: {live_url_flv}")
+            live_url_m3u8 = json['data']['stream_url']['hls_pull_url']
+            self.logger.info(f"LIVE URL: {live_url_m3u8}")
 
-            return live_url_flv
+            return live_url_m3u8
         except errors.AccountPrivate as ex:
             raise ex
         except Exception as ex:
